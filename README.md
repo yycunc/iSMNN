@@ -100,16 +100,11 @@ corrected.results <- iSMNN(object.list = merge.list, batch.cluster.labels = batc
                            iterations = 5, dims = 1:20, npcs = 30)
 ```
 
-***iSMNN*** function will return a Seurat object that contains: (1) the batch-corrected expression matrix for each batch; and (2) information regarding mutual nearest neighbors.
-
-In the example below, we treat batch 1 as the reference batch and batch 2 as the batch to be corrected (such that batch 2 will be corrected towards the reference batch 1). Note that the reference batch (i.e., batch 1 in our example) will only applied cosine normalization.
+***iSMNN*** function will return a Seurat object that contains the batch-corrected expression matrix for each batch
 
 ```{r output from SMNNcorrect}
 # Output after correction for batch
-## Output (1): the batch-corrected expression matrix
-corrected.results$corrected[[2]][1:10,1:10]
-## Output (2): mutual nearest neighbor information
-corrected.results$pairs[[2]]
+corrected.results
 ```
 
 ## Citation
