@@ -94,7 +94,7 @@ merge.list <- lapply(X = merge.list, FUN = function(x) {
 
 ### Correct batch effect
 ```{r perform batch effect correction using iSMNN}
-corrected.results <- iSMNN(object.list = merge.list, batch.cluster.labels = batch.cluster.labels, matched.clusters = c("Endothelial cells", "Macrophage", "Fibroblast"),
+corrected.results <- iSMNN(object.list = merge.list, batch.cluster.labels = batch.cluster.labels, matched.clusters = c("endothelial cells", "macrophage", "fibroblast"),
                            iterations = 5, dims = 1:20, npcs = 30)
 ```
 
