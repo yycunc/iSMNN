@@ -73,9 +73,11 @@ batch.cluster.labels <- unifiedClusterLabelling(data_SMNN$batch1.mat, data_iSMNN
 
 ## Batch effect correction using iSMNN function
 
-With harmonized cluster label information for single cells across batches, we implement batch effect correction using iSMNN. Specifically, we apply cosine normalization on both input and output data and set the number of mutual nearest neighbors at 20.
+With harmonized cluster label information for single cells across batches, we implement batch effect correction using iSMNN.
 
 ### Construct the input object for batches using Seurat
+
+Input object is first constructed following the instruction of Seurat. See the tutorial from the [Seurat website](https://satijalab.org/seurat/) for details.
 
 ```{r perform batch effect correction using iSMNN}
 library(Seurat)
@@ -114,4 +116,4 @@ corrected.results$pairs[[2]]
 Yang, Y., Li, G., Yifang Xie, Li Wang, Jiandong Liu, Li Qian, Li., Y. (2020) iSMNN: Batch Effect Correction for Single-cell RNA-seq data via Iterative Supervised Mutual Nearest Neighbor Refinement. *biorxiv*, 
 
 ## Credits
-Some functions are borrowed from or executed according to the [Seurat v3 package](https://satijalab.org/seurat/) (Sturat *et al.*, 2019).
+Some functions are borrowed from or executed according to the [Seurat v3 package](https://github.com/satijalab/seurat) (Sturat *et al.*, 2019).
