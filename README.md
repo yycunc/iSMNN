@@ -61,21 +61,41 @@ Two pieces of information are needed:
 # Maker genes
 markers <- c("Col1a1", "Pdgfra", "Ptprc", "Pecam1")
 # Corresponding cell type labels for each marker gene
-cluster.info <- c(1, 1, 2, 3)
+cluster.info <- c("fibroblast", "fibroblast", "macrophage", "endothelial cells")
 ```
 
 ### Harmonize cluster labels across batches
 
 ```{r, results='hide', fig.show="hide", message=FALSE}
-matched_clusters <- unifiedClusterLabelling(data_SMNN$batch1.mat, data_iSMNN$batch2.mat, features.use = markers, cluster.labels = cluster.info, min.perc = 0.3)
+library(SMNN)
+batch.cluster.labels <- unifiedClusterLabelling(data_SMNN$batch1.mat, data_iSMNN$batch2.mat, features.use = markers, cluster.labels = cluster.info, min.perc = 0.3)
 ```
 
 ## Batch effect correction using iSMNN function
 
 With harmonized cluster label information for single cells across batches, we implement batch effect correction using iSMNN. Specifically, we apply cosine normalization on both input and output data and set the number of mutual nearest neighbors at 20.
 
-```{r perform batch effect correction using SMNNcorrect}
-corrected.results <- iSMNN(batches = list(data_iSMNN$batch1.mat, data_iSMNN$batch2.mat), batch.cluster.labels = matched_clusters, matched.labels=c(1,2,3), k=20, sigma=1, cos.norm.in=TRUE, cos.norm.out=TRUE)
+### Construct the input object for batches using Seurat
+
+```{r perform batch effect correction using iSMNN}
+library(Seurat)
+merge <- CreateSeuratObject(counts = cbind(data_iSMNN$batch1.mat, data_iSMNN$batch2.mat), project = "merge", min.cells = 0, min.features = 0)
+batch_id <- c(rep("batch1", ncol(data_iSMNN$batch1.mat)), rep("batch2", ncol(data_iSMNN$batch2.mat))）
+names(batch_id) <- colnames(merge)
+merge <- AddMetaData(object = merge, metadata = batch_id, col.name = "batch_id")
+merge.list <- SplitObject(merge, split.by = "batch_id")
+
+library(cowplot)
+merge.list <- lapply(X = merge.list, FUN = function(x) {
+  x <- NormalizeData(x)
+  x <- FindVariableFeatures(x, selection.method = "vst", nfeatures = 2000)
+})
+```
+
+### Correct batch effect
+```{r perform batch effect correction using iSMNN}
+corrected.results <- iSMNN(object.list = merge.list, batch.cluster.labels = batch.cluster.labels, matched.clusters = c("Endothelial cells", "Macrophage", "Fibroblast"),
+                           iterations = 5, dims = 1:20, npcs = 30)
 ```
 
 ***iSMNN*** function will return a Seurat object that contains: (1) the batch-corrected expression matrix for each batch; and (2) information regarding mutual nearest neighbors.
