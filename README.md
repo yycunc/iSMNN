@@ -100,7 +100,7 @@ corrected.results <- iSMNN(object.list = merge.list, batch.cluster.labels = batc
                            iterations = 5, dims = 1:20, npcs = 30)
 ```
 
-***iSMNN*** function will return a Seurat object that contains the batch-corrected expression matrix for each batch
+***iSMNN*** function will return a Seurat object that contains the batch-corrected expression matrix for batches
 
 ```{r output from SMNNcorrect}
 # Output after correction for batch
