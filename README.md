@@ -82,7 +82,7 @@ Input object is first constructed following the instruction of Seurat. See the t
 ```{r perform batch effect correction using iSMNN}
 library(Seurat)
 merge <- CreateSeuratObject(counts = cbind(data_iSMNN$batch1.mat, data_iSMNN$batch2.mat), project = "merge", min.cells = 0, min.features = 0)
-batch_id <- c(rep("batch1", ncol(data_iSMNN$batch1.mat)), rep("batch2", ncol(data_iSMNN$batch2.mat))）
+batch_id <- c(rep("batch1", ncol(data_iSMNN$batch1.mat)), rep("batch2", ncol(data_iSMNN$batch2.mat)))
 names(batch_id) <- colnames(merge)
 merge <- AddMetaData(object = merge, metadata = batch_id, col.name = "batch_id")
 merge.list <- SplitObject(merge, split.by = "batch_id")
