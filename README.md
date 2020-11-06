@@ -15,7 +15,7 @@ October 29, 2020
 
 ## Brief introduction
 
-The current implementation of iSMNN encompasses two major steps: one optional cluster harmonizing step and the other batch effect correction step. In the first step, the clusters/cell type labels are matched/harmonized across multiple scRNA-seq batches using *unifiedClusterLabelling* function from **SMNN** package (Yang *et al.* 2020). This entire clustering step can be by-passed by feeding iSMNN cell cluster labels. With cell cluster label information, iSMNN iteratively searches mutual nearest neighbors within each harmonized cell type, and performs batch effect correction using the *iSMNN* function.
+The current implementation of iSMNN encompasses two major steps: one optional cluster harmonizing step and the other batch effect correction step. In the first step, the clusters/cell type labels are matched/harmonized across multiple scRNA-seq batches using *unifiedClusterLabelling* function from [**SMNN** package](https://github.com/yycunc/SMNN) (Yang *et al.* 2020). This entire clustering step can be by-passed by feeding iSMNN cell cluster labels. With cell cluster label information, iSMNN iteratively searches mutual nearest neighbors within each harmonized cell type, and performs batch effect correction using the *iSMNN* function.
 
 In this tutorial, we will perform batch effect correction using iSMNN in a toy example containing two batches. The first batch contains 400 cells from three cell types, namely fibroblasts, macrophages and endothelial cells. And the second batches has 500 cells from the same three cell types. Both two batches contain 3000 genes.
 
@@ -49,7 +49,7 @@ dim(data_iSMNN$batch2.mat)
 
 ## The optional step for cluster harmonizing
 
-The function *unifiedClusterLabelling* from **SMNN** package is used to match/harmonize the clusters/cell type labels across multiple scRNA-seq batches. It takes as input raw expression matrices from two or more batches, a list of marker genes and their corresponding cluster labels, and outputs harmonized cluster label for every single cells across all batches. The SMNN pakcage can be installed from [here](https://github.com/yycunc/SMNN).
+The function *unifiedClusterLabelling* from [**SMNN** package](https://github.com/yycunc/SMNN) is used to match/harmonize the clusters/cell type labels across multiple scRNA-seq batches. It takes as input raw expression matrices from two or more batches, a list of marker genes and their corresponding cluster labels, and outputs harmonized cluster label for every single cells across all batches.
 
 ### Provide cell-type specific marker gene information
 
