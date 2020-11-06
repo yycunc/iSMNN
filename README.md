@@ -71,7 +71,7 @@ library(SMNN)
 batch.cluster.labels <- unifiedClusterLabelling(data_SMNN$batch1.mat, data_iSMNN$batch2.mat, features.use = markers, cluster.labels = cluster.info, min.perc = 0.3)
 ```
 
-## Batch effect correction using iSMNN function
+## Batch effect correction using *iSMNN* function
 
 With harmonized cluster label information for single cells across batches, we implement batch effect correction using iSMNN.
 
