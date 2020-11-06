@@ -77,7 +77,7 @@ With harmonized cluster label information for single cells across batches, we im
 
 ### Construct the input object for batches using Seurat
 
-Input object is first constructed following the instruction of Seurat. See the tutorial from the [Seurat website](https://satijalab.org/seurat/) for details.
+Input object is first constructed following the instruction of **Seurat v3 package**. See the tutorial from the [Seurat website](https://satijalab.org/seurat/) for details.
 
 ```{r perform batch effect correction using iSMNN}
 library(Seurat)
