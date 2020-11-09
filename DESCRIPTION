@@ -1,0 +1,22 @@
+Package: iSMNN
+Title: iSMNN: Batch Effect Correction for Single-cell RNA-seq data via Iterative Supervised Mutual Nearest Neighbor Refinement
+Version: 0.0.0.9000
+Authors@R: 
+    c(person("Yuchen", "Yang", email = "yyuchen@email.unc.edu", role = c("aut", "cre")),
+      person("Gang", "Li", email = "franklee@live.unc.edu", role = c("aut")),
+      person("Yun", "Li", email = "yunli@med.unc.edu", role = c("aut")))
+Maintainer: Yuchen Yang <yyuchen@email.unc.edu>
+Description: This function iSMNN is designed to perform iterative supervised batch effect correction for scRNA-seq data by refining mutual nearest neighbors (MNNs) within corresponding clusters (or cell types) on the top of corrected data. It takes as input raw expression matrices from two or more batches and a list of the unified cluster labels (output from unifiedClusterLabelling of SMNN package). It outputs a Seurat object that contains the the batch-corrected expression matrix for batches
+Depends: R (>= 3.5.0)
+License: GPL-3
+Imports: RANN, future, future.apply, pbapply, Seurat, SMNN
+Suggests: knitr
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
+VignetteBuilder: knitr
+biocViews: Software, SingleCell, Transcription, GUI, RNASeq, Transcriptomics
+Collate: 
+    'iSMNN_utility.R'
+    'iSMNN.R'
+    'iSMNN_data.R'
