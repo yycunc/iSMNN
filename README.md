@@ -105,6 +105,7 @@ corrected.results <- iSMNN(object.list = merge.list, batch.cluster.labels = batc
 ```{r output from SMNNcorrect}
 # Output after correction for batch
 corrected.results
+
 ## An object of class Seurat 
 ## 4624 features across 900 samples within 2 assays 
 ## Active assay: integrated (1624 features)
