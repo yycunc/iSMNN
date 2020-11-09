@@ -1,6 +1,6 @@
 Package: iSMNN
 Title: iSMNN: Batch Effect Correction for Single-cell RNA-seq data via Iterative Supervised Mutual Nearest Neighbor Refinement
-Version: 0.0.0.9000
+Version: 0.99
 Authors@R: 
     c(person("Yuchen", "Yang", email = "yyuchen@email.unc.edu", role = c("aut", "cre")),
       person("Gang", "Li", email = "franklee@live.unc.edu", role = c("aut")),
