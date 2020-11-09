@@ -5,7 +5,7 @@ Batch effect correction is an essential step in the integrative analysis of mult
 
 Here, we present iSMNN, an iterative supervised batch effect correction method that performs multiple rounds of MNN refining and batch effect correction. Our benchmarking showed that, with the help of iterative MNN refining, iSMNN has been demonstrated advantages in removing batch effect yet maximally retaining cell type specific biological features, in particular to the scenarios where different batches largely differ.
 
-iSMNN is maintained by Yuchen Yang [yyuchen@email.unc.edu].
+iSMNN is maintained by Yuchen Yang [yyuchen@email.unc.edu] and Yun Li [yun_li@med.unc.edu].
 
 ## News and Updates
 October 29, 2020
@@ -105,6 +105,11 @@ corrected.results <- iSMNN(object.list = merge.list, batch.cluster.labels = batc
 ```{r output from SMNNcorrect}
 # Output after correction for batch
 corrected.results
+## An object of class Seurat 
+## 4624 features across 900 samples within 2 assays 
+## Active assay: integrated (1624 features)
+##  1 other assay present: RNA
+##  2 dimensional reductions calculated: pca, umap
 ```
 
 ## Citation
