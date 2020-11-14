@@ -114,7 +114,7 @@ corrected.results
 ```
 
 ## Citation
-Yang, Y., Li, G., Xie, Y., Wang, L., Yang, Y., Liu, J., Qian, L., Li., Y. (2020) iSMNN: Batch Effect Correction for Single-cell RNA-seq data via Iterative Supervised Mutual Nearest Neighbor Refinement. *biorxiv*, 2020.
+Yang, Y., Li, G., Xie, Y., Wang, L., Yang, Y., Liu, J., Qian, L., Li., Y. (2020) iSMNN: Batch Effect Correction for Single-cell RNA-seq data via Iterative Supervised Mutual Nearest Neighbor Refinement. *biorxiv*, https://www.biorxiv.org/content/10.1101/2020.11.09.375659v1.
 
 ## Credits
 Some functions are borrowed from or executed according to the [Seurat v3 package](https://github.com/satijalab/seurat) (Sturat *et al.*, 2019).
