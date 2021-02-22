@@ -164,114 +164,121 @@ iSMNN <- function(
   Fbatch_1round = as.data.frame(temp_1round)["batch",]
 
   # iterations
-  if (strategy == "Short.run"){
-    object.combined_desired = object.combined_1round
-    Fbatch_desired = Fbatch_1round
-    for(k in 2:iterations){
-      message(k, " round of batch effect correcting ...")
-      corrected.object = SplitObject(object.combined_desired, split.by = "batch_id")
-      object.anchors_after_correction <- iSMNN_FindSMNNs_aftercorrection(object.list = corrected.object, assay = rep("integrated", length(merge.list)),
-                                                                         batch.cluster.labels = batch.cluster.labels, matched.clusters = matched.clusters, reference = NULL,
-                                                                         anchor.features = anchor.features, scale = scale, normalization.method = "LogNormalize",
-                                                                         reduction = reduction, l2.norm = l2.norm, dims = dims, k.anchor = k.anchor,
-                                                                         k.filter = k.filter, k.score = k.score, max.features = max.features,
-                                                                         nn.method = nn.method, eps = eps, verbose = verbose)
-      object.anchors_k <- object.anchors_1round
-      object.anchors_k@anchors <- object.anchors_after_correction@anchors
+  if (iterations > 1){
+     if (strategy == "Short.run"){
+        object.combined_desired = object.combined_1round
+        Fbatch_desired = Fbatch_1round
+        for (k in 2:iterations){
+          message(k, " round of batch effect correcting ...")
+          corrected.object = SplitObject(object.combined_desired, split.by = "batch_id")
+          object.anchors_after_correction <- iSMNN_FindSMNNs_aftercorrection(object.list = corrected.object, assay = rep("integrated", length(merge.list)),
+                                                                             batch.cluster.labels = batch.cluster.labels, matched.clusters = matched.clusters, reference = NULL,
+                                                                             anchor.features = anchor.features, scale = scale, normalization.method = "LogNormalize",
+                                                                             reduction = reduction, l2.norm = l2.norm, dims = dims, k.anchor = k.anchor,
+                                                                             k.filter = k.filter, k.score = k.score, max.features = max.features,
+                                                                             nn.method = nn.method, eps = eps, verbose = verbose)
+          object.anchors_k <- object.anchors_1round
+          object.anchors_k@anchors <- object.anchors_after_correction@anchors
 
-      k.weight = k.weight_input
-      if (nrow(object.anchors_after_correction@anchors)/2 <= k.weight){
-        k.weight = nrow(object.anchors_after_correction@anchors)/2-1
-      }
-      message("Integrating data...")
-      object.combined_k <- IntegrateData(anchorset = object.anchors_k, dims = dims, k.weight = k.weight, sd.weight = sd.weight, verbose = FALSE)
-      DefaultAssay(object.combined_k) <- "integrated"
+          k.weight = k.weight_input
+          if (nrow(object.anchors_after_correction@anchors)/2 <= k.weight){
+             k.weight = nrow(object.anchors_after_correction@anchors)/2-1
+          }
+          message("Integrating data...")
+          object.combined_k <- IntegrateData(anchorset = object.anchors_k, dims = dims, k.weight = k.weight, sd.weight = sd.weight, verbose = FALSE)
+          DefaultAssay(object.combined_k) <- "integrated"
 
-      # Run the standard workflow for visualization and clustering
-      object.combined_k <- ScaleData(object.combined_k, verbose = FALSE)
-      object.combined_k <- RunPCA(object.combined_k, npcs = npcs, verbose = FALSE)
+          # Run the standard workflow for visualization and clustering
+          object.combined_k <- ScaleData(object.combined_k, verbose = FALSE)
+          object.combined_k <- RunPCA(object.combined_k, npcs = npcs, verbose = FALSE)
 
-      message("UMAP embedding ...")
-      object.combined_k <- RunUMAP(object.combined_k, reduction = "pca", dims = 1:10, verbose = FALSE)
+          message("UMAP embedding ...")
+          object.combined_k <- RunUMAP(object.combined_k, reduction = "pca", dims = 1:10, verbose = FALSE)
 
-      ### F measure for 1st round results
-      data = data.frame(object.combined_k@reductions$umap@cell.embeddings[object.combined_1round@meta.data$cell.anno %in% matched.clusters,])
-      data$Celltype = factor(unlist(batch.cluster.labels)[object.combined_1round@meta.data$cell.anno %in% matched.clusters])
-      data$batch = factor(batch)
+          ### F measure for 1st round results
+          data = data.frame(object.combined_k@reductions$umap@cell.embeddings[object.combined_1round@meta.data$cell.anno %in% matched.clusters,])
+          data$Celltype = factor(unlist(batch.cluster.labels)[object.combined_1round@meta.data$cell.anno %in% matched.clusters])
+          data$batch = factor(batch)
 
-      if (length(levels(data$Celltype))>1){
-        manova_k = manova(object.combined_k@reductions$umap@cell.embeddings[object.combined_1round@meta.data$cell.anno %in% matched.clusters,] ~ Celltype+batch, data = data)
-      } else{
-        manova_k = manova(object.combined_k@reductions$umap@cell.embeddings[object.combined_1round@meta.data$cell.anno %in% matched.clusters,] ~ batch, data = data)
-      }
-      temp_k = summary(manova_k)$stats[1:2,3]
-      Fbatch_k = as.data.frame(temp_k)["batch",]
+          if (length(levels(data$Celltype))>1){
+             manova_k = manova(object.combined_k@reductions$umap@cell.embeddings[object.combined_1round@meta.data$cell.anno %in% matched.clusters,] ~ Celltype+batch, data = data)
+          } else{
+             manova_k = manova(object.combined_k@reductions$umap@cell.embeddings[object.combined_1round@meta.data$cell.anno %in% matched.clusters,] ~ batch, data = data)
+          }
+          temp_k = summary(manova_k)$stats[1:2,3]
+          Fbatch_k = as.data.frame(temp_k)["batch",]
 
-      if (Fbatch_k > Fbatch_desired){
-        k = k-1
-        break
-      } else{
-        object.combined_desired = object.combined_k
-        Fbatch_desired = Fbatch_k
-      }
+          if (Fbatch_k > Fbatch_desired){
+             k = k-1
+             break
+          } else{
+             object.combined_desired = object.combined_k
+             Fbatch_desired = Fbatch_k
+          }
+        }
+        object.combined_desired <- AddMetaData(object = object.combined_desired, metadata = unlist(batch.cluster.labels), col.name = "cell.anno")
+
+        message("Finished! Batch effect correcting was performed for ", k, " iterations.")
+     } else if(strategy == "Long.run"){
+        object.combined_k = object.combined_1round
+        Fbatch_desired = Fbatch_1round
+        Fbatch_record = c(Fbatch_1round)
+        for (k in 2:step){
+          message(k, " round of batch effect correcting ...")
+          corrected.object = SplitObject(object.combined_k, split.by = "batch_id")
+          object.anchors_after_correction <- iSMNN_FindIntegrationAnchors_aftercorrection(object.list = corrected.object, assay = rep("integrated", length(merge.list)),
+                                                                                          batch.cluster.labels = batch.cluster.labels, matched.clusters = matched.clusters, reference = NULL,
+                                                                                          anchor.features = anchor.features, scale = scale, normalization.method = "LogNormalize",
+                                                                                          reduction = reduction, l2.norm = l2.norm, dims = dims, k.anchor = k.anchor,
+                                                                                          k.filter = k.filter, k.score = k.score, max.features = max.features,
+                                                                                          nn.method = nn.method, eps = eps, verbose = verbose)
+         object.anchors_k <- object.anchors_1round
+         object.anchors_k@anchors <- object.anchors_after_correction@anchors
+
+         k.weight = k.weight_input
+         if (nrow(object.anchors_after_correction@anchors)/2 <= k.weight){
+            k.weight = nrow(object.anchors_after_correction@anchors)/2-1
+         }
+         message("Integrating data...")
+         object.combined_k <- IntegrateData(anchorset = object.anchors_k, dims = dims, k.weight = k.weight, sd.weight = sd.weight, verbose = FALSE)
+         DefaultAssay(object.combined_k) <- "integrated"
+
+         # Run the standard workflow for visualization and clustering
+         object.combined_k <- ScaleData(object.combined_k, verbose = FALSE)
+         object.combined_k <- RunPCA(object.combined_k, npcs = npcs, verbose = FALSE)
+
+         message("UMAP embedding ...")
+         object.combined_k <- RunUMAP(object.combined_k, reduction = "pca", dims = 1:10, verbose = FALSE)
+
+         ### F measure for 1st round results
+         data = data.frame(object.combined_k@reductions$umap@cell.embeddings[object.combined_1round@meta.data$cell.anno %in% matched.clusters,])
+         data$Celltype = factor(unlist(batch.cluster.labels)[object.combined_1round@meta.data$cell.anno %in% matched.clusters])
+         data$batch = factor(batch)
+
+         if (length(levels(data$Celltype))>1){
+            manova_k = manova(object.combined_k@reductions$umap@cell.embeddings[object.combined_1round@meta.data$cell.anno %in% matched.clusters,] ~ Celltype+batch, data = data)
+         } else{
+            manova_k = manova(object.combined_k@reductions$umap@cell.embeddings[object.combined_1round@meta.data$cell.anno %in% matched.clusters,] ~ batch, data = data)
+         }
+         temp_k = summary(manova_k)$stats[1:2,3]
+         Fbatch_k = as.data.frame(temp_k)["batch",]
+
+         Fbatch_record = c(Fbatch_record, Fbatch_k)
+         assign(paste0("object.combined_", k, "round"), object.combined_k)
+       }
+
+       desired.k <- which(Fbatch_record == min(Fbatch_record))
+       object.combined_desired <- get(paste0("object.combined_", desired.k, "round"))
+       object.combined_desired <- AddMetaData(object = object.combined_desired, metadata = unlist(batch.cluster.labels), col.name = "cell.anno")
+
+       message("Finished! Batch effect correcting was performed for ", desired.k, " round.")
     }
-    object.combined_desired <- AddMetaData(object = object.combined_desired, metadata = unlist(batch.cluster.labels), col.name = "cell.anno")
 
-    message("Finished! Batch effect correcting was performed for ", k, " iterations.")
-  } else if(strategy == "Long.run"){
-    object.combined_k = object.combined_1round
-    Fbatch_desired = Fbatch_1round
-    Fbatch_record = c(Fbatch_1round)
-    for(k in 2:step){
-      message(k, " round of batch effect correcting ...")
-      corrected.object = SplitObject(object.combined_k, split.by = "batch_id")
-      object.anchors_after_correction <- iSMNN_FindIntegrationAnchors_aftercorrection(object.list = corrected.object, assay = rep("integrated", length(merge.list)),
-                                                                                      batch.cluster.labels = batch.cluster.labels, matched.clusters = matched.clusters, reference = NULL,
-                                                                                      anchor.features = anchor.features, scale = scale, normalization.method = "LogNormalize",
-                                                                                      reduction = reduction, l2.norm = l2.norm, dims = dims, k.anchor = k.anchor,
-                                                                                      k.filter = k.filter, k.score = k.score, max.features = max.features,
-                                                                                      nn.method = nn.method, eps = eps, verbose = verbose)
-      object.anchors_k <- object.anchors_1round
-      object.anchors_k@anchors <- object.anchors_after_correction@anchors
-
-      k.weight = k.weight_input
-      if (nrow(object.anchors_after_correction@anchors)/2 <= k.weight){
-        k.weight = nrow(object.anchors_after_correction@anchors)/2-1
-      }
-      message("Integrating data...")
-      object.combined_k <- IntegrateData(anchorset = object.anchors_k, dims = dims, k.weight = k.weight, sd.weight = sd.weight, verbose = FALSE)
-      DefaultAssay(object.combined_k) <- "integrated"
-
-      # Run the standard workflow for visualization and clustering
-      object.combined_k <- ScaleData(object.combined_k, verbose = FALSE)
-      object.combined_k <- RunPCA(object.combined_k, npcs = npcs, verbose = FALSE)
-
-      message("UMAP embedding ...")
-      object.combined_k <- RunUMAP(object.combined_k, reduction = "pca", dims = 1:10, verbose = FALSE)
-
-      ### F measure for 1st round results
-      data = data.frame(object.combined_k@reductions$umap@cell.embeddings[object.combined_1round@meta.data$cell.anno %in% matched.clusters,])
-      data$Celltype = factor(unlist(batch.cluster.labels)[object.combined_1round@meta.data$cell.anno %in% matched.clusters])
-      data$batch = factor(batch)
-
-      if (length(levels(data$Celltype))>1){
-        manova_k = manova(object.combined_k@reductions$umap@cell.embeddings[object.combined_1round@meta.data$cell.anno %in% matched.clusters,] ~ Celltype+batch, data = data)
-      } else{
-        manova_k = manova(object.combined_k@reductions$umap@cell.embeddings[object.combined_1round@meta.data$cell.anno %in% matched.clusters,] ~ batch, data = data)
-      }
-      temp_k = summary(manova_k)$stats[1:2,3]
-      Fbatch_k = as.data.frame(temp_k)["batch",]
-
-      Fbatch_record = c(Fbatch_record, Fbatch_k)
-      assign(paste0("object.combined_", k, "round"), object.combined_k)
-    }
-
-    desired.k <- which(Fbatch_record == min(Fbatch_record))
-    object.combined_desired <- get(paste0("object.combined_", desired.k, "round"))
-    object.combined_desired <- AddMetaData(object = object.combined_desired, metadata = unlist(batch.cluster.labels), col.name = "cell.anno")
-
-    message("Finished! Batch effect correcting was performed for ", desired.k, " round.")
+    return(object.combined_desired)
+    
+  } else{
+    
+    return(object.combined_desired)
+    
   }
-
-  return(object.combined_desired)
 }
