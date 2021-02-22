@@ -119,6 +119,14 @@ corrected.results
 ##  2 dimensional reductions calculated: pca, umap
 ```
 
+## Batch effect correction using SMNN
+
+Our previous developed batch effect correction method SMNN (Yang *et al.*, Briefings in Bioinformatics, 2020)) can be considered as a special case of iSMNN. If want to use SMNN, users can simply define the number of iteration as 1 (iterations = 1), for example,
+```{r perform batch effect correction using iSMNN}
+corrected.results <- iSMNN(object.list = merge.list, batch.cluster.labels = batch.cluster.labels, matched.clusters = c("endothelial cells", "macrophage", "fibroblast"),
+                            strategy = "Short.run", iterations = 1, dims = 1:20, npcs = 30, k.filter = 30)
+```
+
 ## Citation
 Yang, Y., Li, G., Xie, Y., Wang, L., Yang, Y., Liu, J., Qian, L., Li., Y. (2020) iSMNN: Batch Effect Correction for Single-cell RNA-seq data via Iterative Supervised Mutual Nearest Neighbor Refinement. *biorxiv*, https://www.biorxiv.org/content/10.1101/2020.11.09.375659v1.
 
