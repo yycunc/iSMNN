@@ -69,6 +69,8 @@ cluster.info <- c("fibroblast", "fibroblast", "macrophage", "endothelial cells")
 ```{r, results='hide', fig.show="hide", message=FALSE}
 library(SMNN)
 batch.cluster.labels <- unifiedClusterLabelling(data_SMNN$batch1.mat, data_iSMNN$batch2.mat, features.use = markers, cluster.labels = cluster.info, min.perc = 0.3)
+names(batch.cluster.labels[[1]])=colnames(data_iSMNN$batch1.mat)
+names(batch.cluster.labels[[2]])=colnames(data_iSMNN$batch2.mat)
 ```
 
 ## Batch effect correction using *iSMNN* function
