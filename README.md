@@ -121,7 +121,7 @@ corrected.results
 
 ## Batch effect correction using SMNN
 
-Our previous developed batch effect correction method SMNN (Yang *et al.*, Briefings in Bioinformatics, 2020)) can be considered as a special case of iSMNN, where only one iteration is execute. Thus, users can also implement SMNN for batch effect correction using ***iSMNN*** function via simply defining the number of iteration as 1 (iterations = 1), for example,
+Our previous developed batch effect correction method SMNN (Yang *et al.*, Briefings in Bioinformatics, 2020) can be considered as a special case of iSMNN, where only one iteration is execute. Thus, users can also implement SMNN for batch effect correction using ***iSMNN*** function via simply defining the number of iteration as 1 (iterations = 1), for example,
 ```{r perform batch effect correction using iSMNN}
 corrected.results <- iSMNN(object.list = merge.list, batch.cluster.labels = batch.cluster.labels, matched.clusters = c("endothelial cells", "macrophage", "fibroblast"),
                             strategy = "Short.run", iterations = 1, dims = 1:20, npcs = 30, k.filter = 30)
