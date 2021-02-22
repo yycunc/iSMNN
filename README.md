@@ -8,6 +8,10 @@ Here, we present iSMNN, an iterative supervised batch effect correction method t
 iSMNN is maintained by Yuchen Yang [yyuchen@email.unc.edu] and Yun Li [yun_li@med.unc.edu].
 
 ## News and Updates
+Febrary 22, 2021
+* Version 1.00 released
+  + Small errors are fixed in this version
+
 October 29, 2020
 * Version 0.99.0 released
   + First offical release
