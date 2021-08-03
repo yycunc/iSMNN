@@ -128,7 +128,7 @@ corrected.results <- iSMNN(object.list = merge.list, batch.cluster.labels = batc
 ```
 
 ## Citation
-Yang, Y., Li, G., Xie, Y., Wang, L., Yang, Y., Liu, J., Qian, L., Li., Y. (2020) iSMNN: Batch Effect Correction for Single-cell RNA-seq data via Iterative Supervised Mutual Nearest Neighbor Refinement. *biorxiv*, https://www.biorxiv.org/content/10.1101/2020.11.09.375659v1.
+Yang, Y., Li, G., Xie, Y., Wang, L., Yang, Y., Liu, J., Qian, L., Li., Y. (2020) iSMNN: Batch Effect Correction for Single-cell RNA-seq data via Iterative Supervised Mutual Nearest Neighbor Refinement. *Briefings in Bioinformatics*, bbab122. https://doi.org/10.1093/bib/bbab122.
 
 ## Credits
 Some functions are borrowed from or executed according to the [Seurat v3 package](https://github.com/satijalab/seurat) (Sturat *et al.*, 2019).
