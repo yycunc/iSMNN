@@ -15,7 +15,8 @@ iSMNN(object.list = merge.list, batch.cluster.labels = batch.cluster.labels, mat
 
 \item{matched.clusters}{specifies the cell clusters matched between two or more batches.}
 
-\item{strategy}{XXX}
+\item{strategy}{specifies the iteration option chosen for batch effect correction that in the first option \code{"Short.run"}, iSMNN runs for a fixed number of iterations (default = 5) and takes the output with the lowest F statistic as the optimal correction results;
+in the second option \code{"Long.run"}, after the first local minimum is observed, an additional number of iterations (default = 3) is run to allow leveraging possible further decrease of F statistic after the first local minimal value.}
 
 \item{iterations}{defines the number of iterations to execute.}
 
