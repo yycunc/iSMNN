@@ -16,8 +16,8 @@ NULL
 #' @param assay A vector of assay names specifying which assay to use when constructing anchors. If NULL, the current default assay for each object is used.
 #' @param batch.cluster.labels is a list of vectors specifying the cluster labels of each cell from each batch. Cells not belonging to any clusters should be set to 0.
 #' @param matched.clusters specifies the cell clusters matched between two or more batches.
-#' @param strategy specifies the iteration option chosen for batch effect correction that in the first option "\code{Short.run}", iSMNN runs for a fixed number of iterations (default = 5) and takes the output with the lowest F statistic as the optimal correction results;  
-#' in the second option "\code{Long.run}", after the first local minimum is observed, an additional number of iterations (default = 3) is run to allow leveraging possible further decrease of F statistic after the first local minimal value.
+#' @param strategy specifies the iteration option chosen for batch effect correction that in the first option \code{"Short.run"}, iSMNN runs for a fixed number of iterations (default = 5) and takes the output with the lowest F statistic as the optimal correction results;  
+#' in the second option \code{"Long.run"}, after the first local minimum is observed, an additional number of iterations (default = 3) is run to allow leveraging possible further decrease of F statistic after the first local minimal value.
 #' @param iterations defines the number of iterations to execute.
 #' @param reference A vector specifying the object/s to be used as a reference during integration. If NULL (default),
 #' all pairwise anchors are found (no reference/s). If not NULL, the corresponding objects in \code{object.list}
