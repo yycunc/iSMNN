@@ -172,7 +172,7 @@ iSMNN <- function(
         for (k in 2:iterations){
           message(k, " round of batch effect correcting ...")
           corrected.object = SplitObject(object.combined_desired, split.by = "batch_id")
-          object.anchors_after_correction <- iSMNN_FindSMNNs_aftercorrection(object.list = corrected.object, assay = rep("integrated", length(merge.list)),
+          object.anchors_after_correction <- iSMNN_FindSMNNs_aftercorrection(object.list = corrected.object, assay = rep("integrated", length(object.list)),
                                                                              batch.cluster.labels = batch.cluster.labels, matched.clusters = matched.clusters, reference = NULL,
                                                                              anchor.features = anchor.features, scale = scale, normalization.method = "LogNormalize",
                                                                              reduction = reduction, l2.norm = l2.norm, dims = dims, k.anchor = k.anchor,
@@ -227,7 +227,7 @@ iSMNN <- function(
         for (k in 2:step){
           message(k, " round of batch effect correcting ...")
           corrected.object = SplitObject(object.combined_k, split.by = "batch_id")
-          object.anchors_after_correction <- iSMNN_FindIntegrationAnchors_aftercorrection(object.list = corrected.object, assay = rep("integrated", length(merge.list)),
+          object.anchors_after_correction <- iSMNN_FindIntegrationAnchors_aftercorrection(object.list = corrected.object, assay = rep("integrated", length(object.list)),
                                                                                           batch.cluster.labels = batch.cluster.labels, matched.clusters = matched.clusters, reference = NULL,
                                                                                           anchor.features = anchor.features, scale = scale, normalization.method = "LogNormalize",
                                                                                           reduction = reduction, l2.norm = l2.norm, dims = dims, k.anchor = k.anchor,
